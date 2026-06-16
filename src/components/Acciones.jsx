@@ -6,7 +6,7 @@ function Actions() {
     },
     {
       title: "Evita desperdiciar comida",
-      image: "src/assets/2.jpg",
+      image: "./src/assets/2.jpg",
     },
     {
       title: "Recicla correctamente",
