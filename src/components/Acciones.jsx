@@ -6,11 +6,11 @@ function Actions() {
     },
     {
       title: "Evita desperdiciar comida",
-      image: "./src/assets/2.jpg",
+      image: "./assets/2.jpg",
     },
     {
       title: "Recicla correctamente",
-      image: "src/assets/3.jpg",
+      image: "../assets/3.jpg",
     },
     {
       title: "Ahorra agua y energía",
