@@ -9,15 +9,15 @@ import Cuadros from "./components/Cuadros";
 import About from "./components/Info";
 import Actions from "./components/Acciones";
 
-import Login from "./magia/Login";
-import Welcome from "./magia/Perfil";
+import Login from "./Sesion/Login";
+import Welcome from "./Sesion/Perfil";
 
 function Home() {
   return (
     <>
       <Navbar />
       <Cuadros />
-      <About />
+      {/* <About /> */}
       <Actions />
     </>
   );

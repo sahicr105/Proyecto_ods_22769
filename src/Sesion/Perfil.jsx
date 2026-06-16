@@ -12,9 +12,9 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "../firebase";
+import Navbar from "../components/Navbar";
 
 function Welcome({ user }) {
-
   // ESTADOS
   const [datosUsuario, setDatosUsuario] = useState(null);
   const [contadorVisual, setContadorVisual] = useState(0);
@@ -129,7 +129,10 @@ function Welcome({ user }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#efefef] p-10">
+      <>
+    <Navbar />
+
+    <div className="min-h-screen bg-[#efefef] p-10 pt-24">
       {}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
 
@@ -281,6 +284,7 @@ function Welcome({ user }) {
         </div>
       </div>
     </div>
+      </>
   );
 }
 

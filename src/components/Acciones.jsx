@@ -19,17 +19,17 @@ function Actions() {
   ];
 
   return (
-    <section className="py-20 md:py-28 px-4 md:px-6 bg-[#f8f8f5]">
+    <section className="py-12 md:py-12 px-6 md:px-6 bg-[#dddddd]">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-center mb-10 md:mb-16">
+        <h2 className="text-[#4f3724] text-4xl md:text-5xl lg:text-6xl font-serif leading-tight text-center mb-8">
           ¿Qué puedes hacer tú?
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
+        <div className="grid grid-cols- md:grid-cols-4 gap-4 md:gap-8">
           {actions.map((action, index) => (
             <div
               key={index}
-              className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 flex md:block"
+              className="group bg-white overflow-hidden shadow-lg flex md:block"
             >
               {/* Imagen */}
               <div className="w-28 h-28 md:w-full md:h-auto flex-shrink-0 overflow-hidden">
