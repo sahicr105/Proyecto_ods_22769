@@ -2,7 +2,7 @@ function Actions() {
   const actions = [
     {
       title: "Usa bolsas reutilizables",
-      image: "./src/assets/1.jpg",
+      image: "../src/assets/1.jpg",
     },
     {
       title: "Evita desperdiciar comida",
