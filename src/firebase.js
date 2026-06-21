@@ -1,14 +1,6 @@
 import { initializeApp } from "firebase/app";
-
-import {
-  getAuth,
-  GoogleAuthProvider,
-  setPersistence,
-  browserSessionPersistence
-} from "firebase/auth";
-
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyAgoS-njblH2wMK4ZItSpuWbG1a4pB9uNo",
@@ -20,19 +12,8 @@ const firebaseConfig = {
   measurementId: "G-FHJHWBTTG6"
 };
 
-
 const app = initializeApp(firebaseConfig);
 
-
 export const auth = getAuth(app);
-
 export const provider = new GoogleAuthProvider();
-
 export const db = getFirestore(app);
-
-
-// SESIÓN TEMPORAL
-setPersistence(
-  auth,
-  browserSessionPersistence
-);
