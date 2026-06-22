@@ -236,7 +236,7 @@ function Login() {
                 
                 <button
                   onClick={resetPassword}
-                  className="text-sm text-blue-600 hover:underline mt-2"
+                  className="text-sm text-blue-600 hover:underline mt-2 cursor-pointer"
                 >
                   ¿Olvidaste tu contraseña?
                 </button>
