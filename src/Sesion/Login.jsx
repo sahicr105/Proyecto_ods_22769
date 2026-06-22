@@ -41,14 +41,14 @@ function Login() {
 
       if (!user.emailVerified) {
         await signOut(auth);
-        setMensaje("❌ Debes verificar tu correo de Google (raro, pero posible en algunos providers)");
+        setMensaje("❌ Debes verificar tu cuenta de Google");
         return;
       }
 
       setMensaje("✅ Bienvenido con Google");
     } catch (error) {
       console.error(error);
-      setMensaje("❌ Error con Google login");
+      setMensaje("❌ Error en Google login");
     }
   };
 
@@ -112,7 +112,7 @@ function Login() {
         displayName: nombre,
       });
 
-      // 📧 ENVIAR VERIFICACIÓN
+      // 📧 VERIFICACIÓN
       await sendEmailVerification(user);
 
       // 🗄️ FIRESTORE
@@ -130,12 +130,12 @@ function Login() {
       // 🔥 IMPORTANTE: cerrar sesión para evitar acceso automático
       await signOut(auth);
 
-      setMensaje("📧 Te enviamos un correo. Revisa tu bandeja y verifica tu cuenta.");
+      setMensaje("📧 Revisa tu correo para verificar tu cuenta");
 
       setRegister(false);
     } catch (error) {
       console.error(error);
-      setMensaje("❌ Error al crear cuenta");
+      setMensaje("❌ Error al registrar cuenta");
     }
   };
 
