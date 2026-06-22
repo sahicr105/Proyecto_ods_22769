@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
+  signOut,
 } from "firebase/auth";
 
 import { doc, setDoc } from "firebase/firestore";
@@ -27,10 +28,19 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmar, setConfirmar] = useState("");
 
+  // MENSAJE UI
+  const [mensaje, setMensaje] = useState("");
+
   // GOOGLE LOGIN
   const loginGoogle = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // 🔒 bloquear si no existe en tu BD (opcional recomendado)
+      // aquí podrías hacer getDoc igual que antes
+
+      setMensaje(`Bienvenido ${user.displayName}`);
     } catch (error) {
       console.error(error);
     }
@@ -47,34 +57,36 @@ function Login() {
 
       const user = userCredential.user;
 
-      // 🔒 BLOQUEO SI NO VERIFICÓ EMAIL
+      // 🔒 BLOQUEO DE VERIFICACIÓN
       if (!user.emailVerified) {
-        alert("Debes verificar tu correo antes de iniciar sesión");
+        await signOut(auth);
+        setMensaje("❌ Debes verificar tu correo antes de iniciar sesión");
         return;
       }
+
+      setMensaje("✅ Bienvenido");
     } catch (error) {
       console.error(error);
-      alert("Correo o contraseña incorrectos");
+      setMensaje("❌ Correo o contraseña incorrectos");
     }
   };
 
   // REGISTRO
   const registrar = async () => {
     if (!nombre || !correo || !password || !confirmar) {
-      return alert("Complete todos los campos");
+      return setMensaje("⚠️ Complete todos los campos");
     }
 
     if (password !== confirmar) {
-      return alert("Las contraseñas no coinciden");
+      return setMensaje("⚠️ Las contraseñas no coinciden");
     }
 
-    // VALIDACIÓN PASSWORD SEGURA
     const passwordRegex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&._-])[A-Za-z\d@$!%*#?&._-]{8,}$/;
 
     if (!passwordRegex.test(password)) {
-      return alert(
-        "La contraseña debe tener mínimo 8 caracteres, 1 letra, 1 número y 1 símbolo"
+      return setMensaje(
+        "⚠️ La contraseña debe tener 8+ caracteres, 1 letra, 1 número y 1 símbolo"
       );
     }
 
@@ -88,12 +100,12 @@ function Login() {
 
       const user = userCredential.user;
 
-      // 👤 NOMBRE DE USUARIO
+      // 👤 NOMBRE
       await updateProfile(user, {
         displayName: nombre,
       });
 
-      // 📧 VERIFICACIÓN DE EMAIL
+      // 📧 ENVIAR VERIFICACIÓN
       await sendEmailVerification(user);
 
       // 🗄️ FIRESTORE
@@ -108,12 +120,15 @@ function Login() {
         primerImpacto: null,
       });
 
-      alert("Cuenta creada. Revisa tu correo para verificarla.");
+      // 🔥 IMPORTANTÍSIMO: cerrar sesión para que NO entre al perfil
+      await signOut(auth);
+
+      setMensaje("📧 Te enviamos un correo. Revisa tu bandeja y verifica tu cuenta.");
 
       setRegister(false);
     } catch (error) {
       console.error(error);
-      alert("Error al crear cuenta");
+      setMensaje("❌ Error al crear cuenta");
     }
   };
 
@@ -135,6 +150,13 @@ function Login() {
         {/* DERECHA */}
         <div className="flex items-center justify-center px-8 py-10">
           <div className="w-full max-w-md">
+
+            {/* MENSAJE */}
+            {mensaje && (
+              <div className="mb-4 p-3 rounded bg-yellow-100 text-yellow-800">
+                {mensaje}
+              </div>
+            )}
 
             {/* LOGIN */}
             {!register ? (
