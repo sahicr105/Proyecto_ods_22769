@@ -48,7 +48,7 @@ function App() {
           <Route
             path="/login"
             element={
-              user
+              user && user.emailVerified
                 ? <Navigate to="/welcome" />
                 : <Login />
             }
@@ -57,7 +57,7 @@ function App() {
           <Route
             path="/welcome"
             element={
-              user
+              user && user.emailVerified
                 ? <Welcome user={user} />
                 : <Navigate to="/login" />
             }

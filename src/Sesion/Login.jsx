@@ -31,22 +31,28 @@ function Login() {
   // MENSAJE UI
   const [mensaje, setMensaje] = useState("");
 
-  // GOOGLE LOGIN
+  // 🔵 GOOGLE LOGIN
   const loginGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // 🔒 bloquear si no existe en tu BD (opcional recomendado)
-      // aquí podrías hacer getDoc igual que antes
+      await user.reload();
 
-      setMensaje(`Bienvenido ${user.displayName}`);
+      if (!user.emailVerified) {
+        await signOut(auth);
+        setMensaje("❌ Debes verificar tu correo de Google (raro, pero posible en algunos providers)");
+        return;
+      }
+
+      setMensaje("✅ Bienvenido con Google");
     } catch (error) {
       console.error(error);
+      setMensaje("❌ Error con Google login");
     }
   };
 
-  // LOGIN EMAIL
+  // 🔐 LOGIN EMAIL
   const loginEmailPassword = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -57,7 +63,8 @@ function Login() {
 
       const user = userCredential.user;
 
-      // 🔒 BLOQUEO DE VERIFICACIÓN
+      await user.reload();
+
       if (!user.emailVerified) {
         await signOut(auth);
         setMensaje("❌ Debes verificar tu correo antes de iniciar sesión");
@@ -71,10 +78,10 @@ function Login() {
     }
   };
 
-  // REGISTRO
+  // 🧾 REGISTRO
   const registrar = async () => {
     if (!nombre || !correo || !password || !confirmar) {
-      return setMensaje("⚠️ Complete todos los campos");
+      return setMensaje("⚠️ Completa todos los campos");
     }
 
     if (password !== confirmar) {
@@ -86,7 +93,7 @@ function Login() {
 
     if (!passwordRegex.test(password)) {
       return setMensaje(
-        "⚠️ La contraseña debe tener 8+ caracteres, 1 letra, 1 número y 1 símbolo"
+        "⚠️ Mínimo 8 caracteres, 1 letra, 1 número y 1 símbolo"
       );
     }
 
@@ -120,7 +127,7 @@ function Login() {
         primerImpacto: null,
       });
 
-      // 🔥 IMPORTANTÍSIMO: cerrar sesión para que NO entre al perfil
+      // 🔥 IMPORTANTE: cerrar sesión para evitar acceso automático
       await signOut(auth);
 
       setMensaje("📧 Te enviamos un correo. Revisa tu bandeja y verifica tu cuenta.");
@@ -164,7 +171,7 @@ function Login() {
                 <h1 className="text-5xl font-black mb-4">LOGIN</h1>
 
                 <p className="text-gray-600 mb-10 text-lg">
-                  Ingrese sus datos para iniciar sesión
+                  Inicia sesión con tu cuenta
                 </p>
 
                 <div className="space-y-5">
@@ -187,14 +194,14 @@ function Login() {
 
                   <button
                     onClick={loginEmailPassword}
-                    className="w-full bg-green-700 hover:bg-green-800 transition text-white py-4 rounded-lg text-lg"
+                    className="w-full bg-green-700 hover:bg-green-800 text-white py-4 rounded-lg"
                   >
                     INICIAR SESIÓN
                   </button>
 
                   <button
                     onClick={loginGoogle}
-                    className="w-full border border-gray-300 hover:bg-gray-100 transition py-4 rounded-lg text-lg"
+                    className="w-full border border-gray-300 hover:bg-gray-100 py-4 rounded-lg"
                   >
                     Continuar con Google
                   </button>
@@ -217,14 +224,14 @@ function Login() {
                 <h1 className="text-5xl font-black mb-4">REGISTRO</h1>
 
                 <p className="text-gray-600 mb-10 text-lg">
-                  Cree su cuenta llenando la siguiente información
+                  Crea tu cuenta
                 </p>
 
                 <div className="space-y-5">
 
                   <input
                     type="text"
-                    placeholder="Nombre(s)"
+                    placeholder="Nombre"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     className="w-full p-4 rounded-lg border border-gray-300 outline-none focus:border-green-700 bg-white"
@@ -256,7 +263,7 @@ function Login() {
 
                   <button
                     onClick={registrar}
-                    className="w-full bg-green-700 hover:bg-green-800 transition text-white py-4 rounded-lg text-lg"
+                    className="w-full bg-green-700 hover:bg-green-800 text-white py-4 rounded-lg"
                   >
                     REGISTRARSE
                   </button>
