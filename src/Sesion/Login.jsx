@@ -14,6 +14,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { auth, provider, db } from "../firebase";
 import Navbar from "../components/Navbar";
 import eco from "../assets/form.jpg";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 function Login() {
   const [register, setRegister] = useState(false);
@@ -139,6 +140,21 @@ function Login() {
     }
   };
 
+  const resetPassword = async () => {
+    if (!loginEmail) {
+      setMensaje("⚠️ Ingresa tu correo primero");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, loginEmail);
+      setMensaje("📧 Se envió un correo para restablecer tu contraseña");
+    } catch (error) {
+      console.error(error);
+      setMensaje("❌ No se pudo enviar el correo");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -217,6 +233,13 @@ function Login() {
                     CREAR
                   </span>
                 </p>
+                
+                <button
+                  onClick={resetPassword}
+                  className="text-sm text-blue-600 hover:underline mt-2"
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
               </>
             ) : (
               <>
