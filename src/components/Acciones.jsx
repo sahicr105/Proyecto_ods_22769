@@ -1,20 +1,25 @@
+import img1 from "../assets/1.jpg";
+import img2 from "../assets/2.jpg";
+import img3 from "../assets/3.jpg";
+import img4 from "../assets/4.jpg";
+
 function Actions() {
   const actions = [
     {
       title: "Usa bolsas reutilizables",
-      image: "../src/assets/1.jpg",
+      image: img1,
     },
     {
       title: "Evita desperdiciar comida",
-      image: "./assets/2.jpg",
+      image: img2,
     },
     {
       title: "Recicla correctamente",
-      image: "../assets/3.jpg",
+      image: img3,
     },
     {
       title: "Ahorra agua y energía",
-      image: "src/assets/4.jpg",
+      image: img4,
     },
   ];
 
@@ -25,7 +30,7 @@ function Actions() {
           ¿Qué puedes hacer tú?
         </h2>
 
-        <div className="grid grid-cols- md:grid-cols-4 gap-4 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
           {actions.map((action, index) => (
             <div
               key={index}
