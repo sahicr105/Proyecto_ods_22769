@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+} from "firebase/firestore";
 import { db } from "../firebase";
-import { Link } from "react-router-dom";
 
 function Cuadros() {
   const [impacto, setImpacto] = useState({
@@ -10,13 +15,20 @@ function Cuadros() {
     desperdicios: 0,
     usuarios: 0,
   });
-  
+
+  const [fechaInicio, setFechaInicio] = useState("");
+
+  const fechaActual = new Date().toLocaleDateString("es-MX", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
   useEffect(() => {
     const obtenerImpacto = async () => {
       try {
-        const querySnapshot = await getDocs(
-          collection(db, "usuarios")
-        );
+        // Obtener todos los usuarios para las estadísticas
+        const querySnapshot = await getDocs(collection(db, "usuarios"));
 
         let bolsas = 0;
         let botellas = 0;
@@ -36,7 +48,29 @@ function Cuadros() {
           desperdicios,
           usuarios: querySnapshot.size,
         });
-        
+
+        // Obtener el primer impacto registrado
+        const primeraFechaQuery = query(
+          collection(db, "usuarios"),
+          orderBy("primerImpacto", "asc"),
+          limit(1)
+        );
+
+        const primeraFechaSnapshot = await getDocs(primeraFechaQuery);
+
+        if (!primeraFechaSnapshot.empty) {
+          const fecha = primeraFechaSnapshot.docs[0]
+            .data()
+            .primerImpacto.toDate();
+
+          setFechaInicio(
+            fecha.toLocaleDateString("es-MX", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          );
+        }
       } catch (error) {
         console.error(error);
       }
@@ -46,10 +80,8 @@ function Cuadros() {
   }, []);
 
   return (
-    /*6*/
     <section id="impacto">
       <div className="bg-[#dddddd] px-6 pt-2 md:px-10 lg:px-16">
-
         <section className="mt-10 bg-[#f6f5ef] border-4 border-[#d2d2d2] py-16 px-6 md:px-10">
           <div className="text-center">
             <h2 className="text-[#4f3724] text-4xl md:text-5xl lg:text-6xl font-serif leading-tight">
@@ -57,12 +89,11 @@ function Cuadros() {
             </h2>
 
             <div className="mt-4 text-[#6b5a4a] text-sm md:text-base leading-6">
-              <p>Actualizado: X</p>
-              <p>Desde: X</p>
+              <p>Actualizado: {fechaActual}</p>
+              <p>Desde: {fechaInicio || "Sin registros"}</p>
             </div>
           </div>
 
-          {}
           <div className="mt-16 grid grid-cols-2 gap-y-10 md:grid-cols-4">
             <Stat number={impacto.bolsas} label="Bolsas reutilizadas" />
             <Stat number={impacto.botellas} label="Botellas recicladas" />
@@ -88,4 +119,5 @@ function Stat({ number, label }) {
     </div>
   );
 }
+
 export default Cuadros;
