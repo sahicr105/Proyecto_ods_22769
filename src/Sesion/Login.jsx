@@ -31,8 +31,8 @@ function Login() {
 
   // MENSAJE UI
   const [mensaje, setMensaje] = useState("");
-  const [mostrarProteccion, setMostrarProteccion] = useState(false);
-  const [acepta, setAcepta] = useState(false);
+  const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
+  const [mostrarPrivacidad, setMostrarPrivacidad] = useState(false);
 
   // GOOGLE LOGIN
   const loginGoogle = async () => {
@@ -48,7 +48,7 @@ function Login() {
         return;
       }
 
-      setMostrarProteccion(true);
+      setMensaje("✅ Bienvenido con Google");
     } catch (error) {
       console.error(error);
       setMensaje("❌ Error en Google login");
@@ -74,18 +74,25 @@ function Login() {
         return;
       }
 
-      setMostrarProteccion(true);
+      setMensaje("✅ Bienvenido");
     } catch (error) {
       console.error(error);
       setMensaje("❌ Correo o contraseña incorrectos");
     }
   };
 
+
+
   // REGISTRO
   const registrar = async () => {
     if (!nombre || !correo || !password || !confirmar) {
       return setMensaje("⚠️ Completa todos los campos");
     }
+
+  // AVISO
+  if (!aceptaPrivacidad) {
+    return setMensaje("⚠️ Debes aceptar el Aviso de Privacidad.");
+  }
 
     if (password !== confirmar) {
       return setMensaje("⚠️ Las contraseñas no coinciden");
@@ -159,62 +166,6 @@ function Login() {
   return (
     <>
       <Navbar />
-
-      {mostrarProteccion && (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
-    <div className="bg-white p-8 rounded-2xl shadow-xl w-[90%] max-w-md">
-
-      <h2 className="text-2xl font-bold mb-4">
-        🔒 Protección de datos
-      </h2>
-
-      <p className="text-gray-600 mb-5">
-        Hemos verificado correctamente tu identidad.
-
-        <br /><br />
-
-        Tus datos personales serán protegidos mediante
-        Firebase Authentication y Firestore.
-
-        <br /><br />
-
-        No compartas tus credenciales con terceros.
-      </p>
-
-      <label className="flex gap-2 mb-5">
-
-        <input
-          type="checkbox"
-          checked={acepta}
-          onChange={(e) => setAcepta(e.target.checked)}
-        />
-
-        <span>
-          He leído y acepto el tratamiento de mis datos.
-        </span>
-
-      </label>
-
-      <button
-        disabled={!acepta}
-        onClick={() => {
-
-          setMostrarProteccion(false);
-
-          // Aquí después puedes navegar al inicio
-          navigate("/perfil");
-
-        }}
-        className="w-full bg-green-700 text-white py-3 rounded-lg disabled:bg-gray-300"
-      >
-        Continuar
-      </button>
-
-    </div>
-
-  </div>
-)}
 
       <div className="min-h-screen pt-24 grid md:grid-cols-2 bg-[#f5f5f0]">
 
@@ -341,6 +292,27 @@ function Login() {
                     className="w-full p-4 rounded-lg border border-gray-300 outline-none focus:border-green-700 bg-white"
                   />
 
+                  <div className="flex items-start gap-2 text-sm">
+
+                  <input
+                    type="checkbox"
+                    checked={aceptaPrivacidad}
+                    onChange={(e) => setAceptaPrivacidad(e.target.checked)}
+                    className="mt-1"
+                  />
+
+                  <p>
+                    Acepto el{" "}
+                    <span
+                      onClick={() => setMostrarPrivacidad(true)}
+                      className="text-green-700 underline cursor-pointer"
+                    >
+                      Aviso de Privacidad
+                    </span>
+                  </p>
+
+                </div>
+
                   <button
                     onClick={registrar}
                     className="w-full bg-green-700 hover:bg-green-800 text-white py-4 rounded-lg"
@@ -365,6 +337,43 @@ function Login() {
           </div>
         </div>
       </div>
+      {mostrarPrivacidad && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+          <div className="bg-white rounded-xl p-6 max-w-xl w-[90%] max-h-[80vh] overflow-y-auto">
+
+            <h2 className="text-2xl font-bold mb-4">
+              Aviso de Privacidad
+            </h2>
+
+            <p className="text-gray-700 leading-7">
+              Al registrarte en esta aplicación aceptas que los datos personales
+              proporcionados, como tu nombre y correo electrónico, serán utilizados
+              únicamente para crear y administrar tu cuenta de usuario.
+
+              <br /><br />
+
+              La información almacenada no será compartida con terceros y será usada
+              exclusivamente para el funcionamiento de la plataforma y el seguimiento
+              de tus acciones relacionadas con el cuidado del medio ambiente.
+
+              <br /><br />
+
+              Esta aplicación es un proyecto académico y se implementan medidas
+              razonables para proteger los datos registrados.
+            </p>
+
+            <button
+              onClick={() => setMostrarPrivacidad(false)}
+              className="mt-6 bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-lg"
+            >
+              Entendido
+            </button>
+
+          </div>
+
+        </div>
+      )}
     </>
   );
 }
