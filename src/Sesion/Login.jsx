@@ -31,8 +31,10 @@ function Login() {
 
   // MENSAJE UI
   const [mensaje, setMensaje] = useState("");
+  const [mostrarProteccion, setMostrarProteccion] = useState(false);
+  const [acepta, setAcepta] = useState(false);
 
-  // 🔵 GOOGLE LOGIN
+  // GOOGLE LOGIN
   const loginGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -46,14 +48,14 @@ function Login() {
         return;
       }
 
-      setMensaje("✅ Bienvenido con Google");
+      setMostrarProteccion(true);
     } catch (error) {
       console.error(error);
       setMensaje("❌ Error en Google login");
     }
   };
 
-  // 🔐 LOGIN EMAIL
+  // LOGIN EMAIL
   const loginEmailPassword = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -72,14 +74,14 @@ function Login() {
         return;
       }
 
-      setMensaje("✅ Bienvenido");
+      setMostrarProteccion(true);
     } catch (error) {
       console.error(error);
       setMensaje("❌ Correo o contraseña incorrectos");
     }
   };
 
-  // 🧾 REGISTRO
+  // REGISTRO
   const registrar = async () => {
     if (!nombre || !correo || !password || !confirmar) {
       return setMensaje("⚠️ Completa todos los campos");
@@ -99,7 +101,7 @@ function Login() {
     }
 
     try {
-      // 🔥 CREAR USUARIO
+      // CREAR USUARIO
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         correo,
@@ -108,15 +110,15 @@ function Login() {
 
       const user = userCredential.user;
 
-      // 👤 NOMBRE
+      // NOMBRE
       await updateProfile(user, {
         displayName: nombre,
       });
 
-      // 📧 VERIFICACIÓN
+      // VERIFICACION
       await sendEmailVerification(user);
 
-      // 🗄️ FIRESTORE
+      // FIRESTORE DATOS
       await setDoc(doc(db, "usuarios", user.uid), {
         nombre,
         correo,
@@ -128,7 +130,6 @@ function Login() {
         primerImpacto: null,
       });
 
-      // 🔥 IMPORTANTE: cerrar sesión para evitar acceso automático
       await signOut(auth);
 
       setMensaje("📧 Revisa tu correo para verificar tu cuenta");
@@ -158,6 +159,62 @@ function Login() {
   return (
     <>
       <Navbar />
+
+      {mostrarProteccion && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+    <div className="bg-white p-8 rounded-2xl shadow-xl w-[90%] max-w-md">
+
+      <h2 className="text-2xl font-bold mb-4">
+        🔒 Protección de datos
+      </h2>
+
+      <p className="text-gray-600 mb-5">
+        Hemos verificado correctamente tu identidad.
+
+        <br /><br />
+
+        Tus datos personales serán protegidos mediante
+        Firebase Authentication y Firestore.
+
+        <br /><br />
+
+        No compartas tus credenciales con terceros.
+      </p>
+
+      <label className="flex gap-2 mb-5">
+
+        <input
+          type="checkbox"
+          checked={acepta}
+          onChange={(e) => setAcepta(e.target.checked)}
+        />
+
+        <span>
+          He leído y acepto el tratamiento de mis datos.
+        </span>
+
+      </label>
+
+      <button
+        disabled={!acepta}
+        onClick={() => {
+
+          setMostrarProteccion(false);
+
+          // Aquí después puedes navegar al inicio
+          navigate("/perfil");
+
+        }}
+        className="w-full bg-green-700 text-white py-3 rounded-lg disabled:bg-gray-300"
+      >
+        Continuar
+      </button>
+
+    </div>
+
+  </div>
+)}
 
       <div className="min-h-screen pt-24 grid md:grid-cols-2 bg-[#f5f5f0]">
 
