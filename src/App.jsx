@@ -5,6 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
 import Navbar from "./components/Navbar";
+import Principal from "./components/Principal"
 import Cuadros from "./components/Cuadros";
 import Actions from "./components/Acciones";
 
@@ -15,6 +16,7 @@ function Home() {
   return (
     <>
       <Navbar />
+      <Principal />
       <Cuadros />
       <Actions />
     </>
