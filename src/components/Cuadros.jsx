@@ -27,7 +27,7 @@ function Cuadros() {
   useEffect(() => {
     const obtenerImpacto = async () => {
       try {
-        // Obtener todos los usuarios para las estadísticas
+        // Obtener todos los usuarios para estadisticas
         const querySnapshot = await getDocs(collection(db, "usuarios"));
 
         let bolsas = 0;
