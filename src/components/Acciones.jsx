@@ -57,7 +57,17 @@ function Actions() {
           </div>
         </div>
       </section>
+      
+      <footer className="bg-[#d2d2d2] text-white py-10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <p className="text-gray-900 text-sm">
+            © 2026 Realizado por Saúl Hipólito Cruz - Todos los derechos reservados
+        </p>
+      </div>
+    </footer>
     </section>
+
+    
   );
 }
 
